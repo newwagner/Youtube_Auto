@@ -1,0 +1,45 @@
+#!/bin/bash
+# Captura la direccion del video y los capitulos a descargar
+#read -p "Escribe la direccion del video : " vid1
+pasion=https://www.youtube.com/playlist\?list\=PL-nb2EqCDGvdaM1bOktXbwK3Uj8lkSuHj
+#vid1="ttps://www.youtube.com/watch?v=XAvd5x0KpU8"
+read -p "Escribe el numero del primer capitulo : " n1
+read -p "Escribe el numero del ultimo capitulo : " n2
+# read -p "Escribe el numero de otro capitulo : " n3
+
+#establece la fecha
+DIA=`date +"%d/%m/%Y"`
+HORA=`date +"%H:%M"`
+
+# se conecta a la vpn de proton, al servidor mas rapido por udp
+protonvpn-cli c -f --protocol udp
+
+# cambia al directorio de las descargas
+cd /media/salvador/17FB64223875FE8A/Pasion
+
+
+
+# Describe el video y los capitulos a descargar. 
+
+##youtube-dl -i -o "%(playlist_index)s-%(title)s-%(uploader)s-%(id)s" --playlist-items $n1-$n2 --get-filename --skip-download https://www.youtube.com/playlist\?list\=PL-nb2EqCDGvdaM1bOktXbwK3Uj8lkSuHj > log.txt
+youtube-dl -i -o "%(playlist_index)s-%(title)s-%(uploader)s-%(id)s" --playlist-items $n1-$n2 --get-filename --skip-download $pasion > log.txt
+
+echo "Del video - $vid1 se descargaran los capitulos del $n1 y $n2 :"
+echo $DIA >> log.txt
+cat log.txt
+
+
+
+
+# descarga los archivos
+#youtube-dl --playlist-items $n1-$n2 https://www.youtube.com/playlist\?list\=PL-nb2EqCDGvdaM1bOktXbwK3Uj8lkSuHj
+youtube-dl --playlist-items $n1-$n2 $pasion
+# youtube-dl $vid1 --list-formats
+
+# lista los archivos descargados
+echo "Se descargaron los siguientes archivos:"
+ls
+# regresa al directorio raiz
+cd
+# se desconecta la sesion actual del servidor 
+protonvpn-cli disconnect -d
